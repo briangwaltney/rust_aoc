@@ -1,5 +1,5 @@
 fn main() {
-    let input = include_str!("./2021_day_1.txt");
+    let input = include_str!("../inputs/2021/2021_day_1.txt");
     let test_input = "199
 200
 208

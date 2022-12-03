@@ -1,6 +1,8 @@
 #![allow(unused)]
+
+// completed on my own. It took a couple of hours to figure out the array manipulation, but I got it.
 fn main() {
-    let input = include_str!("./2022_day_3.txt");
+    let input = include_str!("../inputs/2022/2022_day_3.txt");
     let test_input = "vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
@@ -137,6 +139,6 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
 
     assert_eq!(part_one(test_input), 157);
     assert_eq!(part_two(test_input), 70);
-    println!("Part one: {}", part_one(input));
-    println!("Part two: {}", part_two(input));
+    println!("Part one: {}", part_one(&input));
+    println!("Part two: {}", part_two(&input));
 }
