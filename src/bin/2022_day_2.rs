@@ -22,9 +22,9 @@ impl Res {
                 Move::Scissors => 6 + &Move::Rock.use_score(),
             },
             Res::Lose => match other {
-                Move::Rock => 0 + &Move::Scissors.use_score(),
-                Move::Paper => 0 + &Move::Rock.use_score(),
-                Move::Scissors => 0 + &Move::Paper.use_score(),
+                Move::Rock => Move::Scissors.use_score(),
+                Move::Paper => Move::Rock.use_score(),
+                Move::Scissors => Move::Paper.use_score(),
             },
             Res::Draw => match other {
                 Move::Rock => 3 + &Move::Rock.use_score(),
@@ -94,7 +94,7 @@ fn main() {
         .lines()
         .map(|line| {
             let moves: Vec<Move> = line
-                .split(" ")
+                .split(' ')
                 .map(|s| s.parse::<Move>().unwrap())
                 .collect();
             moves
@@ -108,7 +108,7 @@ fn main() {
         .lines()
         .map(|line| {
             let moves: Vec<Move> = line
-                .split(" ")
+                .split(' ')
                 .map(|s| s.parse::<Move>().unwrap())
                 .collect();
             moves

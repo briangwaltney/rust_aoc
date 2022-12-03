@@ -72,7 +72,7 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
         }
     }
 
-    fn find_duplicates(line_1: &Vec<char>, line_2: &Vec<char>) -> Vec<i32> {
+    fn find_duplicates(line_1: &[char], line_2: &[char]) -> Vec<i32> {
         let duplicates: Vec<i32> = line_1
             .iter()
             .filter(|&c| line_2.contains(c))
@@ -95,13 +95,12 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
                     parse(&line[line.len() / 2..line.len()]),
                 ]
             })
-            .map(|line| {
+            .flat_map(|line| {
                 let mut duplicates = find_duplicates(&line[0], &line[1]);
                 duplicates.sort();
                 duplicates.dedup();
                 duplicates
             })
-            .flatten()
             .sum::<i32>();
 
         total
@@ -116,10 +115,10 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
         let result = lines
             .chunks(3)
             .map(|chunk| chunk.to_vec())
-            .map(|group| {
-                let g_1 = parse(&group[0]);
-                let g_2 = parse(&group[1]);
-                let g_3 = parse(&group[2]);
+            .flat_map(|group| {
+                let g_1 = parse(group[0]);
+                let g_2 = parse(group[1]);
+                let g_3 = parse(group[2]);
                 let mut dup_1: Vec<i32> = g_1
                     .iter()
                     .filter(|&c| g_2.contains(c))
@@ -131,7 +130,6 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
                 dup_1.dedup();
                 dup_1
             })
-            .flatten()
             .sum::<i32>();
 
         result
@@ -139,6 +137,6 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
 
     assert_eq!(part_one(test_input), 157);
     assert_eq!(part_two(test_input), 70);
-    println!("Part one: {}", part_one(&input));
-    println!("Part two: {}", part_two(&input));
+    println!("Part one: {}", part_one(input));
+    println!("Part two: {}", part_two(input));
 }

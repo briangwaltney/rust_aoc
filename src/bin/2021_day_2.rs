@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-// completed on my own. It took a couple of hours to figure out the array manipulation, but I got it.
+// This one was much easier for me. Didn't have to look anything up, but copilot did help me with the parsing.
 fn main() {
     let input = include_str!("../inputs/2021/2021_day_2.txt");
     let test_input = "forward 5
@@ -54,6 +54,6 @@ forward 2";
 
     assert_eq!(part_one(test_input), 150);
     assert_eq!(part_two(test_input), 900);
-    println!("Part one: {}", part_one(&input));
-    println!("Part two: {}", part_two(&input));
+    println!("Part one: {}", part_one(input));
+    println!("Part two: {}", part_two(input));
 }
