@@ -1,6 +1,4 @@
-// #![allow(unused)]
 use std::str::FromStr;
-
 enum Move {
     Rock,
     Paper,

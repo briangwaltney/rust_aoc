@@ -1,3 +1,11 @@
+use std::ops::RangeInclusive;
+
+use nom::{
+    character::complete::{self, newline},
+    multi::separated_list1,
+    IResult,
+};
+
 fn part_one(input: &str) -> usize {
     let lines: Vec<Vec<Vec<i32>>> = input
         .lines()
@@ -71,11 +79,59 @@ fn part_two(input: &str) -> usize {
     contain_count
 }
 
-fn main() {
+fn parse_numbers(input: &str) -> IResult<&str, RangeInclusive<u32>> {
+    let (input, start) = complete::u32(input)?;
+    let (input, _) = complete::char('-')(input)?;
+    let (input, end) = complete::u32(input)?;
+
+    Ok((input, start..=end))
+}
+
+fn parse_line(input: &str) -> IResult<&str, (RangeInclusive<u32>, RangeInclusive<u32>)> {
+    let (input, first) = parse_numbers(input)?;
+    let (input, _) = complete::char(',')(input)?;
+    let (input, second) = parse_numbers(input)?;
+
+    Ok((input, (first, second)))
+}
+
+fn parse_input(input: &str) -> IResult<&str, Vec<(RangeInclusive<u32>, RangeInclusive<u32>)>> {
+    let (input, lines) = separated_list1(newline, parse_line)(input)?;
+    Ok((input, lines))
+}
+
+fn part_one_better(input: &str) -> usize {
+    let (_, lines) = parse_input(input).unwrap();
+
+    let contain_count = lines
+        .iter()
+        .filter(|(a, b)| {
+            a.clone().into_iter().all(|num| b.contains(&num))
+                || b.clone().into_iter().all(|num| a.contains(&num))
+        })
+        .count();
+
+    contain_count
+}
+
+fn part_two_better(input: &str) -> usize {
+    let (_, lines) = parse_input(input).unwrap();
+
+    let contain_count = lines
+        .iter()
+        .filter(|(a, b)| {
+            a.clone().into_iter().any(|num| b.contains(&num))
+                || b.clone().into_iter().any(|num| a.contains(&num))
+        })
+        .count();
+
+    contain_count
+}
+pub fn input() {
     let input = include_str!("../inputs/2022/2022_day_4.txt");
 
-    println!("Part one: {}", part_one(input));
-    println!("Part two: {}", part_two(input));
+    println!("Part one: {}", part_one_better(input));
+    println!("Part two: {}", part_two_better(input));
 }
 
 //tests
@@ -96,12 +152,12 @@ mod tests {
     #[test]
 
     fn test_part_one() {
-        assert_eq!(part_one(TEST_INPUT), 2);
+        assert_eq!(part_one_better(TEST_INPUT), 2);
     }
 
     #[test]
 
     fn test_part_two() {
-        assert_eq!(part_two(TEST_INPUT), 4);
+        assert_eq!(part_two_better(TEST_INPUT), 4);
     }
 }

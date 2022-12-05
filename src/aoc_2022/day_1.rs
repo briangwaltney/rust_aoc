@@ -1,7 +1,6 @@
-// create main function
-
-fn main() {
-    let text = std::fs::read_to_string("./src/bin/1.txt").expect("Error reading file");
+pub fn run() {
+    let text =
+        std::fs::read_to_string("./src/inputs/2022/2022_day_1.txt").expect("Error reading file");
 
     let part1 = text
         .split("\n\n")
