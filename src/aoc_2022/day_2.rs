@@ -123,7 +123,6 @@ fn part_two(input: &str) -> u32 {
 }
 
 pub fn input() {
-    // read text from 2.txt in this directory
     let input = include_str!("../inputs/2022/2022_day_2.txt");
     println!("Part one: {:?}", part_one(input));
     println!("Part two: {:?}", part_two(input));
