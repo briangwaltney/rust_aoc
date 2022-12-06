@@ -84,9 +84,9 @@ impl Move {
     }
 }
 
-fn main() {
+pub fn input() {
     // read text from 2.txt in this directory
-    let text = std::fs::read_to_string("./src/bin/2.txt").expect("Error reading file");
+    let text = include_str!("../inputs/2022/2022_day_2.txt");
 
     let part_one = &text
         .lines()

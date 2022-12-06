@@ -122,7 +122,7 @@ fn part_two(input: &str) -> i32 {
     result
 }
 // completed on my own. It took a couple of hours to figure out the array manipulation, but I got it.
-fn main() {
+pub fn input() {
     let input = include_str!("../inputs/2022/2022_day_3.txt");
 
     println!("Part one: {}", part_one(input));
