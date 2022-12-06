@@ -84,11 +84,8 @@ impl Move {
     }
 }
 
-pub fn input() {
-    // read text from 2.txt in this directory
-    let text = include_str!("../inputs/2022/2022_day_2.txt");
-
-    let part_one = &text
+fn part_one(input: &str) -> u32 {
+    let part_one = &input
         .lines()
         .map(|line| {
             let moves: Vec<Move> = line
@@ -100,9 +97,12 @@ pub fn input() {
         .map(|moves| -> u32 { moves[1].use_score() + moves[1].win_lose(&moves[0]) })
         .sum::<u32>();
 
-    println!("Part one: {}", part_one);
+    *part_one
 
-    let part_two = &text
+}
+
+fn part_two(input: &str) -> u32 {
+    let part_two = &input
         .lines()
         .map(|line| {
             let moves: Vec<Move> = line
@@ -118,5 +118,36 @@ pub fn input() {
         })
         .sum::<u32>();
 
-    println!("Part two: {}", part_two);
+        *part_two
+
+}
+
+pub fn input() {
+    // read text from 2.txt in this directory
+    let input = include_str!("../inputs/2022/2022_day_2.txt");
+    println!("Part one: {:?}", part_one(input));
+    println!("Part two: {:?}", part_two(input));
+
+}
+
+#[cfg(test)]
+
+mod tests {
+
+    use super::*;
+
+    const TEST_ONE: &str = "A Y
+B X
+C Z";
+
+    #[test]
+
+    fn test_part_one() {
+        assert_eq!(part_one(TEST_ONE), 15);
+    }
+
+    #[test]
+    fn test_part_two() {
+        assert_eq!(part_two(TEST_ONE), 12);
+    }
 }
