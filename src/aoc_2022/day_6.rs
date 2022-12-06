@@ -1,6 +1,6 @@
 #![allow(unused_variables, dead_code, unused_imports)]
 
-use std::collections::HashSet;
+use std::collections::{HashSet, BTreeSet};
 
 use nom::{
     character::complete::{self, newline},
@@ -17,44 +17,66 @@ pub fn input() {
 
 fn part_one(input: &str) -> usize {
     // split input into individual chars
-    let chars: Vec<char> = input.chars().collect();
 
-    let mut index = 0;
-    let mut dup = false;
+    // THIS WORKS BUT TRYING ANOTHER WAY FOR LEARNING
+    // let chars: Vec<char> = input.chars().collect();
 
-    while dup == false && index < chars.len() + 3 {
-        let  test_set = &chars[index..=(index + 3)];
-        let  uniques: HashSet<char> = HashSet::from_iter(test_set.iter().cloned());
+    // let mut index = 0;
+    // let mut dup = false;
 
-        if uniques.len() == 4 {
-            dup = true;
-        } else {
-            index += 1;
-        }
-    }
+    // while dup == false && index < chars.len() + 3 {
+    //     let  test_set = &chars[index..=(index + 3)];
+    //     let  uniques: HashSet<char> = HashSet::from_iter(test_set.iter().cloned());
 
-    index + 4
+    //     if uniques.len() == 4 {
+    //         dup = true;
+    //     } else {
+    //         index += 1;
+    //     }
+    // }
+
+    // index + 4
+
+    input
+        .chars()
+        .collect::<Vec<char>>()
+        .windows(4)
+        .enumerate()
+        // BTreeSet is ordered and HashSet is not
+        .find(|(_, x)| x.iter().collect::<BTreeSet<_>>().len() == 4)
+        .unwrap()
+        .0
+        + 4
 }
 
 fn part_two(input: &str) -> usize {
     // split input into individual chars
-    let chars: Vec<char> = input.chars().collect();
+    // let chars: Vec<char> = input.chars().collect();
 
-    let mut index = 0;
-    let mut dup = false;
+    // let mut index = 0;
+    // let mut dup = false;
 
-    while dup == false && index < chars.len() + 13 {
-        let  test_set = &chars[index..=(index + 13)];
-        let  uniques: HashSet<char> = HashSet::from_iter(test_set.iter().cloned());
+    // while dup == false && index < chars.len() + 13 {
+    //     let test_set = &chars[index..=(index + 13)];
+    //     let uniques: HashSet<char> = HashSet::from_iter(test_set.iter().cloned());
 
-        if uniques.len() == 14 {
-            dup = true;
-        } else {
-            index += 1;
-        }
-    }
+    //     if uniques.len() == 14 {
+    //         dup = true;
+    //     } else {
+    //         index += 1;
+    //     }
+    // }
 
-    index + 14
+    // index + 14
+    input
+        .chars()
+        .collect::<Vec<char>>()
+        .windows(14)
+        .enumerate()
+        .find(|(_, x)| x.iter().collect::<HashSet<_>>().len() == 14)
+        .unwrap()
+        .0
+        + 14
 }
 
 //tests
@@ -72,7 +94,6 @@ mod tests {
     const TEST_FIVE: &str = "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw";
 
     #[test]
-
     fn test_part_one() {
         assert_eq!(part_one(TEST_ONE), 7);
         assert_eq!(part_one(TEST_TWO), 5);
