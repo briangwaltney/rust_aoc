@@ -9,7 +9,7 @@ fn count_inc(numbers: &Vec<i32>) -> i32 {
     total
 }
 
-fn part_one(input: &str) -> i32 {
+ fn part_one(input: &str) -> i32 {
     // convert input to a vector of integers
     let numbers: Vec<i32> = input
         .lines()
@@ -36,7 +36,8 @@ fn part_two(input: &str) -> i32 {
 
     count_inc(&numbers)
 }
-fn main() {
+
+pub fn input() {
     let input = include_str!("../inputs/2021/2021_day_1.txt");
 
     println!("Part one: {}", part_one(input));

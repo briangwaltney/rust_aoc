@@ -4,16 +4,8 @@ mod day_1;
 mod day_2;
 mod day_3;
 mod day_4;
-mod day_5;
-mod day_6;
 
 pub fn run() {
-    println!("");
-    println!("Day 6:");
-    day_6::input();
-    println!("");
-    println!("Day 5:");
-    day_5::input();
     println!("");
     println!("Day 4:");
     day_4::input();

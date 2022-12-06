@@ -43,7 +43,7 @@ fn part_two(input: &str) -> i32 {
     }
     (horizontal * vertical).abs()
 }
-fn main() {
+pub fn input() {
     let input = include_str!("../inputs/2021/2021_day_2.txt");
 
     println!("Part one: {}", part_one(input));
