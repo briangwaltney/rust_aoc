@@ -6,8 +6,12 @@ mod day_3;
 mod day_4;
 mod day_5;
 mod day_6;
+mod day_7;
 
 pub fn run() {
+    println!("");
+    println!("Day 7:");
+    day_7::input();
     println!("");
     println!("Day 6:");
     day_6::input();

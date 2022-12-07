@@ -1,3 +1,5 @@
+// allow unused 
+#![allow(unused, dead_code, unused_imports, unused_variables, unused_mut)]
 
 use std::ops::RangeInclusive;
 
@@ -7,129 +9,38 @@ use nom::{
     IResult,
 };
 
-fn part_one(input: &str) -> usize {
-    let lines: Vec<Vec<Vec<i32>>> = input
-        .lines()
-        .map(|line| {
-            line.split(",")
-                .map(|range| {
-                    range
-                        .split('-')
-                        .map(|limit| limit.parse::<i32>().unwrap())
-                        .collect()
-                })
-                .collect()
-        })
-        .collect();
 
-    // println!("{:?}", lines);
+fn parse_board(input: &str) -> IResult<&str, Vec<u32>> {
+  // let lines = input.lines().collect::<Vec<&str>>();
+  //   let (input, first) = complete::u32(lines)?;
+  //   println!("first: {:?}", first);
 
-    let contain_count = lines
-        .iter()
-        .map(|line| match line.as_slice() {
-            [first, second] => {
-                let first = first.as_slice();
-                let second = second.as_slice();
-                let first_contains = first[0] <= second[0] && first[1] >= second[1];
-                let second_contains = second[0] <= first[0] && second[1] >= first[1];
-                first_contains || second_contains
-            }
-            _ => false,
-        })
-        .filter(|x| x == &true)
-        .count();
-
-    contain_count
+    Ok((input, vec![0]))
 }
 
-fn part_two(input: &str) -> usize {
-    let lines: Vec<Vec<Vec<i32>>> = input
-        .lines()
-        .map(|line| {
-            line.split(",")
-                .map(|range| {
-                    range
-                        .split('-')
-                        .map(|limit| limit.parse::<i32>().unwrap())
-                        .collect()
-                })
-                .collect()
-        })
-        .collect();
-
-    // println!("{:?}", lines);
-
-    let contain_count = lines
-        .iter()
-        .map(|line| match line.as_slice() {
-            [first, second] => {
-                let first = first.as_slice();
-                let second = second.as_slice();
-                let first_contains = (first[0] <= second[0] && first[1] >= second[0])
-                    || (first[1] >= second[1] && first[0] <= second[1]);
-                let second_contains = (second[0] <= first[0] && second[1] >= first[0])
-                    || (second[1] >= first[1] && second[0] <= first[1]);
-
-                first_contains || second_contains
-            }
-            _ => false,
-        })
-        .filter(|x| x == &true)
-        .count();
-
-    contain_count
-}
-
-fn parse_numbers(input: &str) -> IResult<&str, RangeInclusive<u32>> {
-    let (input, start) = complete::u32(input)?;
-    let (input, _) = complete::char('-')(input)?;
-    let (input, end) = complete::u32(input)?;
-
-    Ok((input, start..=end))
-}
-
-fn parse_line(input: &str) -> IResult<&str, (RangeInclusive<u32>, RangeInclusive<u32>)> {
-    let (input, first) = parse_numbers(input)?;
-    let (input, _) = complete::char(',')(input)?;
-    let (input, second) = parse_numbers(input)?;
-
-    Ok((input, (first, second)))
-}
-
-fn parse_input(input: &str) -> IResult<&str, Vec<(RangeInclusive<u32>, RangeInclusive<u32>)>> {
-    let (input, lines) = separated_list1(newline, parse_line)(input)?;
-    Ok((input, lines))
-}
 
 fn part_one_better(input: &str) -> usize {
-    let (_, lines) = parse_input(input).unwrap();
+    let mut boards = input.split("\n\n").collect::<Vec<&str>>();
+    let calls = boards
+        .remove(0)
+        .split(",")
+        .map(|x| x.parse::<usize>().unwrap())
+        .collect::<Vec<usize>>();
 
-    let contain_count = lines
-        .iter()
-        .filter(|(a, b)| {
-            a.clone().into_iter().all(|num| b.contains(&num))
-                || b.clone().into_iter().all(|num| a.contains(&num))
-        })
-        .count();
 
-    contain_count
+    println!("{:?}", calls);
+    println!("{:?}", boards);
+    println!("{:?}", parse_board(boards[0]));
+
+    0
 }
 
-fn part_two_better(input: &str) -> usize {
-    let (_, lines) = parse_input(input).unwrap();
-
-    let contain_count = lines
-        .iter()
-        .filter(|(a, b)| {
-            a.clone().into_iter().any(|num| b.contains(&num))
-                || b.clone().into_iter().any(|num| a.contains(&num))
-        })
-        .count();
-
-    contain_count
+fn part_two_better(_input: &str) -> usize {
+    0
 }
+
 pub fn input() {
-    let input = include_str!("../inputs/2022/2022_day_4.txt");
+    let input = include_str!("../inputs/2021/2021_day_4.txt");
 
     println!("Part one: {}", part_one_better(input));
     println!("Part two: {}", part_two_better(input));
@@ -143,20 +54,36 @@ mod tests {
 
     use super::*;
 
-    const TEST_INPUT: &str = "2-4,6-8
-2-3,4-5
-5-7,7-9
-2-8,3-7
-6-6,4-6
-2-6,4-8";
+    const TEST_INPUT: &str =
+        "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+
+22 13 17 11  0
+ 8  2 23  4 24
+21  9 14 16  7
+ 6 10  3 18  5
+ 1 12 20 15 19
+
+ 3 15  0  2 22
+ 9 18 13 17  5
+19  8  7 25 23
+20 11 10 24  4
+14 21 16 12  6
+
+14 21 17 24  4
+10 16 15  9 19
+18  8 23 26 20
+22 11 13  6  5
+ 2  0 12  3  7";
 
     #[test]
+    #[ignore]
 
     fn test_part_one() {
-        assert_eq!(part_one_better(TEST_INPUT), 2);
+        assert_eq!(part_one_better(TEST_INPUT), 4512);
     }
 
     #[test]
+    #[ignore]
 
     fn test_part_two() {
         assert_eq!(part_two_better(TEST_INPUT), 4);

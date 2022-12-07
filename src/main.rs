@@ -1,3 +1,4 @@
+#![feature(iter_intersperse)]
 mod aoc_2022;
 mod aoc_2021;
 
