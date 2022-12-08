@@ -1,42 +1,148 @@
-// allow unused 
+// allow unused
 #![allow(unused, dead_code, unused_imports, unused_variables, unused_mut)]
 
 use std::ops::RangeInclusive;
 
 use nom::{
+    bytes::complete::tag,
     character::complete::{self, newline},
     multi::separated_list1,
     IResult,
 };
 
+fn is_bingo(board: &Vec<Vec<u32>>) -> bool {
+    let mut bingo = false;
 
-fn parse_board(input: &str) -> IResult<&str, Vec<u32>> {
-  // let lines = input.lines().collect::<Vec<&str>>();
-  //   let (input, first) = complete::u32(lines)?;
-  //   println!("first: {:?}", first);
+    // check rows
+    for row in board {
+        if row.iter().all(|x| *x == 0) {
+            bingo = true;
+        }
+    }
 
-    Ok((input, vec![0]))
+    // check columns
+    for i in 0..5 {
+        if board.iter().all(|x| x[i] == 0) {
+            bingo = true;
+        }
+    }
+
+    bingo
 }
 
-
-fn part_one_better(input: &str) -> usize {
+fn part_one_better(input: &str) -> u32 {
     let mut boards = input.split("\n\n").collect::<Vec<&str>>();
     let calls = boards
         .remove(0)
         .split(",")
-        .map(|x| x.parse::<usize>().unwrap())
-        .collect::<Vec<usize>>();
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect::<Vec<u32>>();
 
+    // split each board at line breaks and then into vectors of integers
+    let mut boards = boards
+        .iter()
+        .map(|x| {
+            x.split("\n")
+                .map(|x| {
+                    x.split_whitespace()
+                        .map(|x| x.parse::<u32>().unwrap())
+                        .collect::<Vec<u32>>()
+                })
+                .collect::<Vec<Vec<u32>>>()
+        })
+        .collect::<Vec<Vec<Vec<u32>>>>();
 
-    println!("{:?}", calls);
-    println!("{:?}", boards);
-    println!("{:?}", parse_board(boards[0]));
+    let mut solve: Vec<Vec<u32>> = Vec::new();
+    let mut solved: bool = false;
+    let mut last_call: u32 = 0;
 
-    0
+    for call in calls {
+        if solved {
+            break;
+        }
+        for board in boards.iter_mut() {
+            for row in board.iter_mut() {
+                for num in row.iter_mut() {
+                    if *num == call {
+                        *num = 0;
+                    }
+                }
+            }
+            if is_bingo(board) {
+                solve = board.clone();
+                solved = true;
+                last_call = call;
+                break;
+            }
+        }
+    }
+
+    let remaining_sum = solve.iter().map(|x| x.iter().sum::<u32>()).sum::<u32>();
+
+    remaining_sum * last_call
 }
 
-fn part_two_better(_input: &str) -> usize {
-    0
+fn part_two_better(input: &str) -> u32 {
+    let mut boards = input.split("\n\n").collect::<Vec<&str>>();
+    let calls = boards
+        .remove(0)
+        .split(",")
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect::<Vec<u32>>();
+
+    // split each board at line breaks and then into vectors of integers
+    let mut boards = boards
+        .iter()
+        .map(|x| {
+            x.split("\n")
+                .map(|x| {
+                    x.split_whitespace()
+                        .map(|x| x.parse::<u32>().unwrap())
+                        .collect::<Vec<u32>>()
+                })
+                .collect::<Vec<Vec<u32>>>()
+        })
+        .collect::<Vec<Vec<Vec<u32>>>>();
+
+    let mut solve: Vec<Vec<u32>> = Vec::new();
+    let mut solved = 0;
+    let mut last_call: u32 = 0;
+    let length = boards.len();
+
+    for call in calls {
+        for board in boards.iter_mut() {
+            for row in board.iter_mut() {
+                for num in row.iter_mut() {
+                    if *num == call {
+                        *num = 0;
+                    }
+                }
+            }
+
+            // test all boards for bingo and get length of unsolved boards
+        }
+        let unsolved = &boards
+            .iter()
+            .filter(|x| !is_bingo(x))
+            .collect::<Vec<&Vec<Vec<u32>>>>();
+
+        if unsolved.len() == 1 {
+            solve = unsolved[0].clone();
+        }
+
+        if unsolved.len() == 0 {
+            last_call = call;
+            break;
+        }
+    }
+
+    //print last call
+
+
+    let remaining_sum = solve.iter().map(|x| x.iter().sum::<u32>()).sum::<u32>()
+    - last_call;
+
+    remaining_sum * last_call
 }
 
 pub fn input() {
@@ -76,16 +182,14 @@ mod tests {
  2  0 12  3  7";
 
     #[test]
-    #[ignore]
 
     fn test_part_one() {
         assert_eq!(part_one_better(TEST_INPUT), 4512);
     }
 
     #[test]
-    #[ignore]
 
     fn test_part_two() {
-        assert_eq!(part_two_better(TEST_INPUT), 4);
+        assert_eq!(part_two_better(TEST_INPUT), 1924);
     }
 }
